@@ -87,6 +87,8 @@ public class UsuarioService {
 	public String update (Usuario usuario, long idUsuario) {
 		usuario.setIdUsuario(idUsuario);
 		this.usuarioRepository.save(usuario);
+		Audit audit = new Audit("UPDATE_USUARIO", idUsuario); // Usar o ID do usuário atualizado como referência
+		auditRepository.save(audit);
 		return "O " + usuario.getEmailUsuario() + " Foi atualizado";
 
 
