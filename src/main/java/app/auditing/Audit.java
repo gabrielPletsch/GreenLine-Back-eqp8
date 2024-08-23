@@ -1,19 +1,42 @@
 package app.auditing;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Component;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Component
+import java.time.LocalDateTime;
+
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "audit_log", schema = "greenline")
 public class Audit {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true)
+    private Long id;
 
-    private static final Logger logger = LogManager.getLogger(Audit.class);
+    @Getter @Setter
+    @Column(nullable = false)
+    private String operation;
 
-    public void registrarLogin(String username) {
-        logger.info("Usuário {} fez login com sucesso.", username);
+    @Getter @Setter
+    @Column(nullable = false,updatable = false)
+    private LocalDateTime createDate;
+
+    @Getter @Setter
+    @CreatedBy
+    @Column(nullable = false,updatable = false)
+    private Long createdBy;
+
+
+    public Audit() {
     }
 
-    public void registrarLoginFail(String username) {
-        logger.warn("Falha ao tentar login com o usuário {}.", username);
+    public Audit(String operation, Long userId) {
+        this.operation = operation;
+        this.createdBy = userId;
     }
 }
