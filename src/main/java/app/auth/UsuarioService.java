@@ -48,7 +48,7 @@ public class UsuarioService {
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
 		Audit audit = new Audit("LOGIN_FEITO", user.getIdUsuario());
-		audit.setCreateDate(LocalDateTime.now()); // Use user.getId() or appropriate createdBy value
+		audit.setCreateDate(LocalDateTime.now());
 		auditRepository.save(audit);
 
 		// Gera o token JWT
@@ -87,17 +87,20 @@ public class UsuarioService {
 	public String update (Usuario usuario, long idUsuario) {
 		usuario.setIdUsuario(idUsuario);
 		this.usuarioRepository.save(usuario);
-		Audit audit = new Audit("UPDATE_USUARIO", idUsuario); // Usar o ID do usuário atualizado como referência
+
+
+		Audit audit = new Audit("USUARIO_ATUALIZADO", idUsuario);
+		audit.setCreateDate(LocalDateTime.now());
 		auditRepository.save(audit);
+
 		return "O " + usuario.getEmailUsuario() + " Foi atualizado";
-
-
-
-
 	}
 
 	public String delete (long idUsuario) {
 		this.usuarioRepository.deleteById(idUsuario);
+		Audit audit = new Audit("USUARIO_DELETADO", idUsuario);
+		audit.setCreateDate(LocalDateTime.now()); // Defina a data de criação
+		auditRepository.save(audit);
 		return "Usuario deletado";
 
 	}
