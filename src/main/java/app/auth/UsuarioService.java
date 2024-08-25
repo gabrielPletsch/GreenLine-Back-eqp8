@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import app.auditing.Audit;
 import app.repository.AuditRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,7 +48,7 @@ public class UsuarioService {
 		Usuario user = usuarioRepository.findByEmailUsuario(autenticador.getUsername())
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-		Audit audit = new Audit("LOGIN_FEITO", user.getIdUsuario());
+		Audit audit = new Audit("LOGIN REALIZADO", user.getIdUsuario());
 		audit.setCreateDate(LocalDateTime.now());
 		auditRepository.save(audit);
 
@@ -83,24 +84,19 @@ public class UsuarioService {
 		return usuario;
 
 	}
-
+	@Transactional
 	public String update (Usuario usuario, long idUsuario) {
 		usuario.setIdUsuario(idUsuario);
 		this.usuarioRepository.save(usuario);
 
-
-		Audit audit = new Audit("USUARIO_ATUALIZADO", idUsuario);
-		audit.setCreateDate(LocalDateTime.now());
-		auditRepository.save(audit);
-
 		return "O " + usuario.getEmailUsuario() + " Foi atualizado";
+
+
+
 	}
 
 	public String delete (long idUsuario) {
 		this.usuarioRepository.deleteById(idUsuario);
-		Audit audit = new Audit("USUARIO_DELETADO", idUsuario);
-		audit.setCreateDate(LocalDateTime.now()); // Defina a data de criação
-		auditRepository.save(audit);
 		return "Usuario deletado";
 
 	}
