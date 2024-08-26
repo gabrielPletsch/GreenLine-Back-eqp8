@@ -131,6 +131,7 @@ public class CarrinhoService {
             // Deleta o item do carrinho no banco de dados
             itemCarrinhoRepository.deleteById(item.getIdItem());
         }
+
 		this.carrinhoRepository.deleteById(idCarrinho);
 		return " Venda deletada";
 	}
