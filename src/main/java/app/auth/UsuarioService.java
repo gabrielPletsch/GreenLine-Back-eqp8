@@ -65,8 +65,10 @@ public class UsuarioService {
 		usuario.setSenhaUsuario(senhaCriptografada);
 
 		this.usuarioRepository.save(usuario);
+		Audit audit = new Audit("CADASTRO DE CONTA EFETUADO", usuario.getIdUsuario());
+		audit.setCreateDate(LocalDateTime.now());
+		auditRepository.save(audit);
 		return usuario.getEmailUsuario() + " Foi registrado";
-
 
 
 	}
@@ -75,7 +77,6 @@ public class UsuarioService {
 		return this.usuarioRepository.findAll();
 
 	}
-
 
 
 	public Usuario findById(long idUsuario) {
@@ -97,6 +98,10 @@ public class UsuarioService {
 
 	public String delete (long idUsuario) {
 		this.usuarioRepository.deleteById(idUsuario);
+		Audit audit = new Audit("CADASTRO DE CONTA EFETUADO", idUsuario);
+		audit.setCreateDate(LocalDateTime.now());
+		auditRepository.save(audit);
+
 		return "Usuario deletado";
 
 	}

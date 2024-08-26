@@ -25,6 +25,9 @@ public class ClienteService {
 	
 	public String save (Cliente cliente) {
 		this.clienteRepository.save(cliente);
+		Audit audit = new Audit("CLIENTE ADICIONADO", cliente.getIdCliente());
+		audit.setCreateDate(LocalDateTime.now());
+		auditRepository.save(audit);
 		return cliente.getNomeCliente() + " Foi registrado";
 	}
 	
@@ -66,6 +69,9 @@ public class ClienteService {
 	
 	public String delete (long idCliente) {
 		this.clienteRepository.deleteById(idCliente);
+		Audit audit = new Audit("CLIENTE DELETADO", idCliente);
+		audit.setCreateDate(LocalDateTime.now());
+		auditRepository.save(audit);
 		return "Cliente deletado";
 	}
 	
