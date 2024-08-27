@@ -1,5 +1,6 @@
 package app.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,6 +8,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.auditing.Audit;
+import app.repository.AuditRepository;
 import app.entity.Carrinho;
 import app.entity.ItemCarrinho;
 import app.repository.CarrinhoRepository;
@@ -20,6 +23,8 @@ import java.time.LocalDate;
 @Service
 public class CarrinhoService {
 
+	@Autowired
+	private AuditRepository auditRepository;
 	@Autowired
 	private CarrinhoRepository carrinhoRepository;
 	@Autowired
@@ -69,7 +74,10 @@ public class CarrinhoService {
         carrinho.setDataCarrinho(LocalDate.now());
         //salva o carrinho no banco de dados 
         this.carrinhoRepository.save(carrinho);
-      
+
+		Audit audit = new Audit("CARRINHO CRIADO", carrinho.getIdCarrinho());
+		audit.setCreateDate(LocalDateTime.now());
+		auditRepository.save(audit);
         return carrinho.getValorCarrinho() + "  registrada";
 	}
 	
@@ -114,6 +122,9 @@ public class CarrinhoService {
 		double valorFinal = this.valorTotalCarrinho(carrinho.getItemCarrinho());
 		carrinho.setValorCarrinho(valorFinal);	
 		this.carrinhoRepository.save(carrinho);
+		Audit audit = new Audit("CARRINHO ALTERADO", idCarrinho);
+		audit.setCreateDate(LocalDateTime.now());
+		auditRepository.save(audit);
 		return " Carrinho " + carrinho.getValorCarrinho() + " Foi atualizado";
 		
 	}
@@ -133,6 +144,9 @@ public class CarrinhoService {
         }
 
 		this.carrinhoRepository.deleteById(idCarrinho);
+		Audit audit = new Audit("VENDA DELETADA", idCarrinho);
+		audit.setCreateDate(LocalDateTime.now());
+		auditRepository.save(audit);
 		return " Venda deletada";
 	}
 	
