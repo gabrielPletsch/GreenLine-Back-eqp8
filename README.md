@@ -60,6 +60,18 @@ necessário que deve ser obtido no converge é de 50%.
 ```
 📁 Loja Green Line
 └── 📁src/main/java
+    ├──📁app.auditing
+    │   ├──📁ApplicationAuditAware
+    │   ├──📁Audit
+    ├──📁app.auth
+    │   ├──📁Autenticator
+    │   ├──📁LoginController
+    │   ├──📁LoginRepository
+    │   ├──📁LoginService
+    │   ├──📁Usuario
+    │   ├──📁UsuarioController
+    │   ├──📁UsuarioRepository
+    │   ├──📁UsuarioService
     ├──📁app.controller
     │   ├──📁 categoriaController
     │   ├──📁 produtoController
